@@ -1,7 +1,6 @@
 import logging
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.resource import ResourceManagementClient
-from . import report
 
 SUBSCRIPTION_ID = "0cb2ebf6-d6c2-4b63-9f38-ba16ebe4feb1"
 RESOURCE_GROUP = "cloud-guardian-rg"
@@ -56,6 +55,5 @@ if __name__ == "__main__":
 
     if violations:
         logger.info(f"Writing report with {len(violations)} violations")
-        report.write_report(violations)
     else:
         logger.info(f"All resources compliant. No violations found.")
