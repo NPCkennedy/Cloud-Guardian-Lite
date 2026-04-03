@@ -33,3 +33,12 @@ force push third, notify team fourth. Bots scan GitHub in under 60 seconds.
 Interview story: "Caught my subscription ID in public git history. Not a 
 credential so no rotation needed, but taught me .gitignore must be set up 
 before the first commit — not after."
+
+---
+
+### Fix: Scrubbed subscription ID from git history
+Date: 2026-04-03
+Tool used: BFG Repo Cleaner 1.14.0
+What it did: Replaced subscription ID with ***REMOVED*** in all historical commits
+Result: Clean history, live code reads from .env via python-dotenv
+Lesson: Set up .gitignore and .env before first commit — not after
