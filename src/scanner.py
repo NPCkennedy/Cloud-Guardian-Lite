@@ -2,9 +2,14 @@ import logging
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.resource import ResourceManagementClient
 from . import report
+import os
+from dotenv import load_dotenv
 
-SUBSCRIPTION_ID = "0cb2ebf6-d6c2-4b63-9f38-ba16ebe4feb1"
-RESOURCE_GROUP = "cloud-guardian-rg"
+load_dotenv()
+
+
+SUBSCRIPTION_ID = os.getenv("AZURE_SUBSCRIPTION_ID")
+RESOURCE_GROUP = os.getenv("AZURE_RESOURCE_GROUP")
 REQUIRED_TAGS = ["Owner", "Environment", "CostCenter"]
 
 logging.basicConfig(level=logging.INFO)
