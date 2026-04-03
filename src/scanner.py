@@ -3,7 +3,7 @@ from azure.identity import DefaultAzureCredential
 from azure.mgmt.resource import ResourceManagementClient
 from . import report
 
-SUBSCRIPTION_ID = "***REMOVED***"
+SUBSCRIPTION_ID = "0cb2ebf6-d6c2-4b63-9f38-ba16ebe4feb1"
 RESOURCE_GROUP = "cloud-guardian-rg"
 REQUIRED_TAGS = ["Owner", "Environment", "CostCenter"]
 
