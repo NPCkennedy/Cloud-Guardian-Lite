@@ -1,5 +1,7 @@
 # Cloud Guardian Lite
 
+![GitHub Actions](https://github.com/NPCkennedy/Cloud-Guardian-Lite/actions/workflows/scanner.yml/badge.svg)
+
 An Azure compliance scanner that detects untagged cloud resources and sends real-time alerts via Microsoft Teams.
 
 Built to address **MAS TRM 2021 Section 9.1.2** — financial institutions must maintain a cloud asset inventory with clearly defined ownership and accountability. Untagged resources create a direct compliance gap.
