@@ -4,7 +4,35 @@
 
 An Azure compliance scanner that detects untagged cloud resources and sends real-time alerts via Microsoft Teams.
 
-Built to address **MAS TRM 2021 Section 9.1.2** — financial institutions must maintain a cloud asset inventory with clearly defined ownership and accountability. Untagged resources create a direct compliance gap.
+---
+
+## Why This Exists
+
+**MAS TRM 2021 Section 9.1.2** requires Singapore financial institutions to maintain a cloud asset inventory with clearly defined ownership and accountability. Untagged resources create a direct compliance gap — you cannot prove who owns a resource, what environment it belongs to, or which cost center to bill.
+
+Cloud Guardian Lite automates the detection of these gaps and alerts the responsible team in real time.
+
+---
+
+## Why Not Just Use Azure Policy?
+
+Azure Policy is free, built into Azure, and handles compliance enforcement natively. So why build Cloud Guardian?
+
+| | Azure Policy | Cloud Guardian |
+|---|---|---|
+| Blocks non-compliant resources | ✅ At creation | ❌ Detection only |
+| Audit trail | Azure portal only | ✅ Portable JSON artifact |
+| External alerting | Limited | ✅ Any webhook — Teams, Slack, PagerDuty |
+| CI/CD integration | ❌ | ✅ GitHub Actions pipeline |
+| Portable to AWS/GCP | ❌ | ✅ Python — adaptable |
+| Custom business logic | Limited | ✅ Full control |
+
+**In production you would use both:**
+- Azure Policy for real-time enforcement at resource creation
+- Cloud Guardian for audit reporting and integration with external systems
+
+**Why build it instead of just using Azure Policy:**
+Understanding compliance tooling by building it from scratch — Azure SDK, credential chain, CI/CD pipeline, webhook integration — is what separates an engineer from someone who just knows a tool exists.
 
 ---
 
@@ -32,8 +60,6 @@ Push a commit to trigger the pipeline. Within 60 seconds:
 3. Detects untagged resources in the resource group
 4. Writes `violations.json` — downloadable as a pipeline artifact
 5. Sends Teams alert with violation details
-
-![Demo flow]
 
 ```
 git push
@@ -143,10 +169,7 @@ python -m src.scanner
 
 **1. Create a Service Principal**
 ```bash
-az ad sp create-for-rbac \
-  --name "cloud-guardian-sp" \
-  --role "Reader" \
-  --scopes "/subscriptions/YOUR_SUBSCRIPTION_ID/resourceGroups/YOUR_RESOURCE_GROUP"
+az ad sp create-for-rbac --name "cloud-guardian-sp" --role "Reader" --scopes "/subscriptions/YOUR_SUBSCRIPTION_ID/resourceGroups/YOUR_RESOURCE_GROUP"
 ```
 
 Note the output — `appId`, `password`, `tenant`. The password is shown only once.
@@ -169,26 +192,24 @@ Go to your repo → Settings → Secrets and variables → Actions → New repos
 git push
 ```
 
-The scanner runs automatically on every push and daily at 9am SGT (1am UTC).
-
 ---
 
 ## Project Structure
 
 ```
 cloud-guardian/
-    src/
-        __init__.py       — marks src/ as a Python package
-        scanner.py        — connects to Azure, checks tags, orchestrates scan
-        report.py         — writes timestamped violations.json
-        notifier.py       — sends Teams alert via webhook
-    tests/
-        test_scanner.py   — unit tests
-    .github/workflows/
-        scanner.yml       — GitHub Actions pipeline
-    .env.example        — environment variable template
-    requirements.txt    — pinned dependencies
-    README.md
+  src/
+    __init__.py       — marks src/ as a Python package
+    scanner.py        — connects to Azure, checks tags, orchestrates scan
+    report.py         — writes timestamped violations.json
+    notifier.py       — sends Teams alert via webhook
+  .github/workflows/
+    scanner.yml       — GitHub Actions pipeline
+  .env.example        — environment variable template
+  requirements.txt    — pinned dependencies
+  ARCHITECTURE.md     — full pipeline diagram
+  DEBUGGING.md        — real bugs documented with root causes and fixes
+  README.md
 ```
 
 ---
@@ -217,20 +238,7 @@ for resource in resources:
 - `exit(0)` — scan complete, no violations
 - `exit(1)` — violations found OR script error
 
-GitHub Actions marks the pipeline as failed on `exit(1)` — making violations immediately visible in the Actions tab.
-
----
-
-## MAS TRM Context
-
-MAS Technology Risk Management Guidelines 2021 Section 9.1.2 requires Singapore financial institutions to maintain an inventory of cloud assets with clearly defined ownership and accountability.
-
-Cloud Guardian addresses this by:
-- Detecting resources missing `Owner` attribution
-- Detecting resources missing `Environment` classification
-- Detecting resources missing `CostCenter` for billing accountability
-- Producing a timestamped audit trail in `violations.json`
-- Alerting the responsible team in real time via Teams
+Pipeline failure on violations is intentional — makes compliance issues immediately visible in the Actions tab.
 
 ---
 
@@ -240,9 +248,8 @@ Cloud Guardian addresses this by:
 - Service Principal scoped to `Reader` role on the resource group only — least privilege
 - `.env` file excluded from git via `.gitignore`
 - GitHub Secrets encrypted at rest — never visible in logs
+- If Service Principal credentials leak — blast radius is read-only on one resource group
 
-
----
 
 ## Tech Stack
 
