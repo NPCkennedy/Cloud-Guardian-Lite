@@ -8,7 +8,7 @@ An Azure compliance scanner that detects untagged cloud resources and sends real
 
 ## Why This Exists
 
-**MAS TRM 2021 Section 9.1.2** requires Singapore financial institutions to maintain a cloud asset inventory with clearly defined ownership and accountability. Untagged resources create a direct compliance gap — you cannot prove who owns a resource, what environment it belongs to, or which cost center to bill.
+**MAS TRM 2021 Section 9.1.2** requires Singapore financial institutions to maintain a cloud asset inventory with clearly defined ownership and accountability. Untagged resources create a direct compliance gap, you cannot prove who owns a resource, what environment it belongs to, or which cost center to bill.
 
 Cloud Guardian Lite automates the detection of these gaps and alerts the responsible team in real time.
 
@@ -32,7 +32,7 @@ Azure Policy is free, built into Azure, and handles compliance enforcement nativ
 - Cloud Guardian for audit reporting and integration with external systems
 
 **Why build it instead of just using Azure Policy:**
-Understanding compliance tooling by building it from scratch — Azure SDK, credential chain, CI/CD pipeline, webhook integration — is what separates an engineer from someone who just knows a tool exists.
+Understanding compliance tooling by building it from scratch — Azure SDK, credential chain, CI/CD pipeline, webhook integration, is what separates an engineer from someone who just knows a tool exists.
 
 ---
 
@@ -151,7 +151,7 @@ az account set --subscription "your-subscription-id"
 
 **4. Configure environment variables**
 
-Create a `.env` file in the repo root — never commit this file:
+Create a `.env` file in the repo root. never commit this file:
 ```
 AZURE_SUBSCRIPTION_ID=your-subscription-id
 AZURE_RESOURCE_GROUP=your-resource-group-name
@@ -244,10 +244,10 @@ Pipeline failure on violations is intentional — makes compliance issues immedi
 
 ## Security
 
-- Zero hardcoded credentials — all secrets via environment variables
+- Zero hardcoded credentials, all secrets via environment variables
 - Service Principal scoped to `Reader` role on the resource group only — least privilege
 - `.env` file excluded from git via `.gitignore`
-- GitHub Secrets encrypted at rest — never visible in logs
+- GitHub Secrets encrypted at rest. never visible in logs
 - If Service Principal credentials leak — blast radius is read-only on one resource group
 
 
